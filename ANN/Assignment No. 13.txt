@@ -1,0 +1,78 @@
+
+13.4. MNIST Handwritten Character Detection using PyTorch, Keras and Tensorflow
+
+Code:
+import tensorflow as tf
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.optimizers import Adam
+
+# Load and preprocess the MNIST dataset
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+X_train = X_train / 255.0
+X_test = X_test / 255.0
+
+# Define the model architecture
+model = Sequential([
+    Flatten(input_shape=(28, 28)),
+    Dense(128, activation='relu'),
+    Dense(10, activation='softmax')
+])
+
+# Compile the model
+model.compile(optimizer=Adam(learning_rate=0.001),
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train, batch_size=64, epochs=10, verbose=1)
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f"Test Loss: {loss}")
+print(f"Test Accuracy: {accuracy}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+Output:
+
+Epoch 1/10
+938/938 [==============================] - 5s 4ms/step - loss: 0.2984 - accuracy: 0.9153
+Epoch 2/10
+938/938 [==============================] - 7s 7ms/step - loss: 0.1353 - accuracy: 0.9612
+Epoch 3/10
+938/938 [==============================] - 4s 4ms/step - loss: 0.0944 - accuracy: 0.9723
+Epoch 4/10
+938/938 [==============================] - 4s 5ms/step - loss: 0.0708 - accuracy: 0.9783
+Epoch 5/10
+938/938 [==============================] - 4s 4ms/step - loss: 0.0558 - accuracy: 0.9833
+Epoch 6/10
+938/938 [==============================] - 4s 4ms/step - loss: 0.0447 - accuracy: 0.9864
+Epoch 7/10
+938/938 [==============================] - 4s 4ms/step - loss: 0.0363 - accuracy: 0.9892
+Epoch 8/10
+938/938 [==============================] - 4s 5ms/step - loss: 0.0293 - accuracy: 0.9913
+Epoch 9/10
+938/938 [==============================] - 4s 4ms/step - loss: 0.0255 - accuracy: 0.9927
+Epoch 10/10
+938/938 [==============================] - 4s 4ms/step - loss: 0.0202 - accuracy: 0.9944
+313/313 [==============================] - 1s 2ms/step - loss: 0.0679 - accuracy: 0.9804
+Test Loss: 0.06786014884710312
+Test Accuracy: 0.980400025844574
+
+
+
+
+
+

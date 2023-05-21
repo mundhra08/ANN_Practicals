@@ -1,0 +1,103 @@
+10. Write Python program to implement CNN object detection. Discuss numerous performance
+evaluation metrics for evaluating the object detecting algorithms' performance.
+
+Code:
+
+import keras
+from keras.datasets import cifar10
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras.optimizers import SGD
+from keras.preprocessing.image import ImageDataGenerator
+
+# Load CIFAR-10 dataset
+(X_train, y_train), (X_test, y_test) = cifar10.load_data()
+
+# Define the model
+model = Sequential()
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
+model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Flatten())
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation='softmax'))
+
+# Define data generators
+train_datagen = ImageDataGenerator(rescale=1./255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+# Prepare the data
+train_set = train_datagen.flow(X_train, y_train, batch_size=32)
+test_set = test_datagen.flow(X_test, y_test, batch_size=32)
+
+# Compile the model
+sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+
+# Train the model
+model.fit_generator(train_set, steps_per_epoch=len(X_train)//32, epochs=100, validation_data=test_set, validation_steps=len(X_test)//32)
+
+# Evaluate the model
+score = model.evaluate(test_set, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
+
+
+Output:
+
+Downloading data from https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+170498071/170498071 [==============================] - 3s 0us/step
+Epoch 1/100
+/usr/local/lib/python3.10/dist-packages/keras/optimizers/legacy/gradient_descent.py:114: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.
+  super().__init__(name, **kwargs)
+<ipython-input-15-75bb0166727e>:40: UserWarning: `Model.fit_generator` is deprecated and will be removed in a future version. Please use `Model.fit`, which supports generators.
+  model.fit_generator(train_set, steps_per_epoch=len(X_train)//32, epochs=100, validation_data=test_set, validation_steps=len(X_test)//32)
+1562/1562 [==============================] - 270s 172ms/step - loss: nan - accuracy: 0.9977 - val_loss: nan - val_accuracy: 1.0000
+Epoch 2/100
+1562/1562 [==============================] - 264s 169ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 3/100
+1562/1562 [==============================] - 255s 163ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 4/100
+1562/1562 [==============================] - 242s 155ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 5/100
+1562/1562 [==============================] - 247s 158ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 6/100
+1562/1562 [==============================] - 244s 156ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 7/100
+1562/1562 [==============================] - 244s 156ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 8/100
+1562/1562 [==============================] - 245s 157ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 9/100
+1562/1562 [==============================] - 240s 153ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 10/100
+1562/1562 [==============================] - 251s 161ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 11/100
+1562/1562 [==============================] - 249s 159ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 12/100
+1562/1562 [==============================] - 248s 159ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 13/100
+1562/1562 [==============================] - 243s 156ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 14/100
+1562/1562 [==============================] - 244s 156ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 15/100
+1562/1562 [==============================] - 242s 155ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+Epoch 16/100
+1562/1562 [==============================] - 241s 154ms/step - loss: nan - accuracy: 1.0000 - val_loss: nan - val_accuracy: 1.0000
+
+
+
+
+
+
+
+
+
+
+
